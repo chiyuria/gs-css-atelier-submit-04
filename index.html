@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./js/jquery-2.1.3.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>CSS Atelier</title>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <img src="./img/logo.svg" alt="logo-image" />
+      </div>
+    </header>
+    <div class="wrapper">
+      <div class="left-column">
+        <div class="items-header">
+          <div class="column-title">Your Snippets</div>
+        </div>
+        <div class="search-area">
+          <div class="section-title">Snippets List</div>
+          <input
+            type="text"
+            name="search"
+            id="search"
+            class="input-search"
+            placeholder="Find snippet..."
+          />
+        </div>
+        <div class="item-list">
+          <ul id="item-list"></ul>
+        </div>
+        <div class="tag-area">
+          <div class="tag-filter">
+            <div class="section-title">Filter by Tag</div>
+
+            <div id="tagFilterItems" class="tag-filter-items">
+              <div class="tag-badge filter-tag" data-tag="color">color</div>
+              <div class="tag-badge filter-tag" data-tag="layout">layout</div>
+            </div>
+
+            <div class="section-title">Tag Management</div>
+            <div class="tag-input-area">
+              <input
+                type="text"
+                id="inputTag"
+                class="input-add-tag"
+                placeholder="New tag name..."
+              />
+              <button id="addTag" class="btn add">＋</button>
+            </div>
+            <button id="deleteTag" class="delete-tag btn">
+              Delete Selected Tag
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="center-column">
+        <div class="preview">
+          <div class="preview-header">
+            <div class="column-title">Preview</div>
+            <div class="preview-btn">
+              <button id="toggleCanvasTheme" class="btn toggle">🌙</button>
+              <button id="apply" class="btn">Apply</button>
+              <button id="remove" class="btn">Remove</button>
+            </div>
+          </div>
+          <div class="preview-canvas-wrapper">
+            <div class="preview-canvas">
+              <div id="snippetTarget">Sample</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="right-column">
+        <div class="editor">
+          <div class="editor-header">
+            <div class="column-title">Editor</div>
+            <div class="editor-btn">
+              <button id="clear" class="btn">Clear</button>
+              <button id="copy" class="btn">Copy</button>
+              <button id="save" class="btn">Save</button>
+            </div>
+          </div>
+          <div class="css-editor">
+            <div class="section-title">Name</div>
+            <textarea
+              class="codename"
+              id="codename"
+              placeholder="e.g. glass-card-base"
+            ></textarea>
+            <div class="section-title">Snippet</div>
+            <textarea
+              class="codearea"
+              id="codearea"
+              placeholder="/* Properties only (no selector block) */"
+            ></textarea>
+          </div>
+          <div class="tag-editor">
+            <div class="tag-manager">
+              <div class="section-title">Associated Tags</div>
+              <div id="tagEditorItems" class="tag-editor-items">
+                <div class="tag-badge editor-tag" data-tag="color">color</div>
+                <div class="tag-badge editor-tag" data-tag="layout">layout</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/main.js"></script>
+  </body>
+</html>
