@@ -26,7 +26,7 @@ CSS（レイアウト・UI・レスポンシブ）
 
 # ③アプリのデプロイURL
 
-（GitHub Pages 予定 ※URL記入欄）
+https://chiyuria.github.io/gs-css-atelier-submit-04/
 
 ---
 
