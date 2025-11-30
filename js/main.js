@@ -1,4 +1,5 @@
 let canvasTheme = 0; //0:dark 1:light
+let draftTags = []; //新規作成時のタグ一時保持用配列
 
 //--------ロード時の挙動・テーマ設定--------//
 //----Load----//
@@ -41,16 +42,27 @@ $(document).on("click", ".item-title", function (e) {
   $("#codearea").val(value);
 
   refreshTagEditorItems(associatedTags);
+  applySnippet();
 });
 
 //----Save Snippet----//
 $("#save").on("click", function () {
   const key = $("#codename").val();
   const code = $("#codearea").val();
+  const raw = localStorage.getItem(key);
+  let existingTags = [];
+
+  //タグの存在判定を追加
+  if (raw !== null) {
+    const obj = JSON.parse(raw);
+    existingTags = obj.tags || [];
+  } else {
+    existingTags = draftTags; //一時保存を使うように修正
+  }
 
   data = {
     snippet: code,
-    tags: [],
+    tags: existingTags,
   };
 
   if (key == "" || code == "") {
@@ -94,8 +106,10 @@ $(document).on("click", ".delete-btn", function (e) {
 
 //----Clear Editor----//
 $("#clear").on("click", function () {
+  draftTags = [];
   $("#codename").val("");
   $("#codearea").val("");
+  $(".editor-tag").removeClass("active"); //タグ表示もクリア
   alert("Cleared!");
 });
 
@@ -113,7 +127,12 @@ $("#copy").on("click", function () {
 });
 
 //----Apply Snippet----//
+//即時プレビュー用に関数化//
 $("#apply").on("click", function () {
+  applySnippet();
+});
+
+function applySnippet () {
   const code = $("#codearea").val();
   if (code === "") {
     alert("The snippet area is empty.");
@@ -121,13 +140,11 @@ $("#apply").on("click", function () {
   }
   console.log(code);
   $("#snippetTarget").attr("style", code);
-  alert("Applied the style!");
-});
+}
 
 //----Remove Styles----//
 $("#remove").on("click", function () {
   $("#snippetTarget").attr("style", "");
-  alert("Removed the style!");
 });
 
 //----Search Snippet----//
@@ -243,6 +260,7 @@ $(document).on("click", ".filter-tag", function (e) {
   refreshSnippetList();
 });
 
+//----Apply Tags----//
 $(document).on("click", ".editor-tag", function (e) {
   e.stopPropagation();
 
@@ -259,6 +277,14 @@ $(document).on("click", ".editor-tag", function (e) {
   });
 
   const raw = localStorage.getItem(key);
+
+  //未登録時の一時保存追加
+  if (raw === null) {
+    draftTags = activeTags;
+    console.log(draftTags);
+    return;
+  }
+
   const obj = JSON.parse(raw);
 
   obj.tags = activeTags;
