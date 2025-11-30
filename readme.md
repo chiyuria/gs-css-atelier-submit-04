@@ -1,618 +1,399 @@
-# ①課題名
+# 🚀 **① 課題提出フォーマット）**
 
 **CSS Atelier（CSSスニペット管理アプリ）**
 
 ---
 
-# ②課題内容（どんな作品か）
+## **① 課題名**
 
-* CSSスニペットを保存・検索・タグ管理できる **LocalStorage Webアプリ**
-* 左：スニペット一覧＋検索＋タグフィルタ
-  中央：リアルタイムプレビュー（Light / Dark切替）
-  右：エディタ（名前・CSSプロパティ入力）
-* LocalStorage により **保存・更新・削除・タグ紐付け** をすべてブラウザ内で完結
-* “プロパティのみ入力 → プレビューへ即適用” の **高速デザイン試作ツール**
-
-さらに本アプリは、
-**UIデザインを“視覚で確かめながら集めていける”CSSスニペットのスクラップブック**
-となるよう設計。小さなスタイルの断片を試し、即座に見た目で評価し、そのままストックできる構造を重視した。
-
-ソース：
-HTML（UI構造）
-JS（状態管理・タグ管理・LocalStorage制御）
-CSS（レイアウト・UI・レスポンシブ）
+**CSS Atelier（CSSスニペット管理アプリ）**
 
 ---
 
-# ③アプリのデプロイURL
+## **② 課題内容（作品概要）**
 
-https://chiyuria.github.io/gs-css-atelier-submit-04/
+本アプリは、
+**CSSスニペットの保存・検索・タグ管理・即時プレビューを1つにまとめた LocalStorage 完全完結型のWebアプリ** です。
+
+UIは **3カラム（List / Preview / Editor）構成** とし、CSSを視覚的にストックする
+**“ビジュアルCSSスクラップブック”** をコンセプトに設計しました。
+
+特徴：
+
+* CSSプロパティだけを入力すれば即プレビューに反映
+* タグの追加・削除・紐付けを LocalStorage 上で双方向同期
+* キーワード検索 × タグフィルタのAND検索
+* 削除や通知はすべて **カスタムPromiseモーダル（mkOk / mkConfirm）** に統一
+* モバイルでは “プレビュー → エディタ → リスト” に並び替えて最適化
+
+利用技術：
+
+* HTML（UIレイアウト）
+* CSS（デザイン・レスポンシブ）
+* jQuery（イベント・状態管理）
+* LocalStorage（データ保存）
+* Clipboard API
+* Promiseベースのカスタムモーダル（mkOk / mkConfirm）
 
 ---
 
-# ④アプリにログイン情報がある場合
+## **③ デプロイURL**
+
+[https://chiyuria.github.io/gs-css-atelier-submit-04/](https://chiyuria.github.io/gs-css-atelier-submit-04/)
+
+---
+
+## **④ ログイン情報**
 
 なし
 
 ---
 
-# ⑤こだわった点
+## **⑤ こだわった点**
 
-* **タグ管理のUX特化：名前検索とタグフィルタをAND条件で組み合わせられる検索体験を設計**
-  キーワード検索と複数タグ選択を同時に処理し、
-  「求めているスニペットが素早く見つかる」検索UXを実現。
-  タグとスニペットの紐付けはLocalStorageで持ち、タグ削除時には全スニペット側も自動更新して整合性を維持。
+### **① タグ検索UXの強化（ANDロジック × キーワード検索）**
 
-* **タグバッジのワンタップで即タグ付与できる直感的UI**
-  コード入力中でも、エディタ右側のタグバッジをクリックするだけで即タグ付与／解除。
-  **分類 → 保存 → 検索** までのループが止まらず回る“軽量タグシステム”を追求。
+複数タグ選択＋名前検索を同時に行えるUIを設計し、
+目的のスニペットに高速でアクセスできる検索体験を重視した。
 
-* **名前とプロパティを分離し、プロパティのみ即プレビュー可能な設計**
-  CSSプロパティだけを扱うことで、
-  *「このスタイル、どんな見た目だっけ？」* を一瞬で視覚確認できる。
-  まさに **UIデザインのスクラップブック** として使える仕組みにした。
-
-* **3カラム＋モバイル最適化のレイアウトにこだわった**
-  PCでは
-  **左：検索 & フィルタ / 中央：プレビュー / 右：エディタ**
-  が同時表示され、UI試作時の作業効率を最大化。
-  モバイルでは
-  **プレビュー → エディタ → リスト**
-  の順に並べ替え、縦スクロールでも扱いやすくした。
-  viewport・高さ制御・scroll調整まで徹底して崩れにくいレイアウトを構築。
-
-* **配色・シャドウ・透過を統一し“プロダクトの世界観”を作り込んだ**
-  Interフォント、ダークUI、紫系アクセント、ガラス系のエフェクトを組み合わせ、
-  ボタン・タグ・カードのブラーと影の強弱まで丁寧に調整。
-  「学習用UI」ではなく、**実際に使えるデザイン試作ツール** として成り立つ質感に寄せた。
+タグ削除時は
+**① tagList → ② 各snippet → ③ 全UI**
+の順で同期し、データ整合性を維持。
 
 ---
 
-# ⑥ 難しかった点・次回トライしたいこと
+### **② プロパティだけで即プレビューできる構造**
 
-* **スニペット削除時の影響範囲の整理**
-  タグリストとスニペットがLocalStorageで別管理のため、
-  タグ削除→スニペット側のtags更新→一覧描画→エディタ描画…と、
-  **双方向同期の理解と処理順序** が難しかった。
+スニペット名とCSSプロパティを分離し、
+プロパティを `style=""` に直挿しする形式を採用。
 
-* **refresh系関数の描画タイミングの把握**
-  `refreshSnippetList()` が
-  *検索キーワード → タグ → LocalStorage走査*
-  を一度に扱うため、どのイベントで再描画されるか掴むまで混乱した。
-
-* **配列操作と JSON.parse / stringify の理解不足**
-  LocalStorageが文字列しか扱わないため、
-  *読み込み → オブジェクト化 → 編集 → 文字列化 → 保存*
-  の流れを理解するのに時間が必要だった。
-
-* **AND検索（タグ＋名前）のロジック構築**
-  小さな条件を積み上げてAND判定を成立させる部分で試行錯誤が多かった。
-
-* **レスポンシブ時の高さ・余白・overflow調整**
-  カラム変換後に崩れないよう、
-  *min-width* やスクロール領域を何度も微調整した。
+CSSの “見た目確認” が圧倒的に速いデザイン試作環境にした。
 
 ---
 
-# ⑦ フリー項目
+### **③ 3カラムレイアウトの最適化**
 
-* 今回は最初に **PowerPointでワイヤーフレームを作成**し、画面構成とUIの動線を視覚化してから実装に入った。
-  この事前設計で、HTML構造がブレず安定した。
+* PC：左（検索）中央（プレビュー）右（エディタ）
+* モバイル：プレビュー → エディタ → リスト の順へ再構成
 
-* ワイヤーをそのまま **HTMLで“色付きブロックのパズル”として仮レイアウト** したことで、
-  「どの要素がどの役割を持つのか」が立体的に理解できた。
-
-* レイアウトが固まった後に **JSの機能を順番に流し込む進め方が自分に合っていた**。
-  UIの土台がしっかりしていた分、ロジックに集中でき、動作の意図も整理しやすかった。
+Grid・高さ制御・レイアウト崩れ対策を徹底し、実際に使えるUIに寄せた。
 
 ---
 
-# 🎨 **CSS Atelier – README**
-
----
-
-# 📝 概要（Overview）
-
-**CSS Atelier** は、CSSスニペットを保存・検索・タグ管理し、即プレビューできる軽量Webアプリです。
-
-単なるCRUDツールではなく、
-**「UIデザインを視覚で確かめながら、小さなCSSフラグメントを集めていく“ビジュアル・スクラップブック”」**
-として設計されています。
-
-これは実務で頻出する、
-
-*「再利用したいCSSをストックして、あとで取り出し、見た目を確かめながら使う」*
-
-というワークフローを、
-**LocalStorageだけで高速に実現** するためのアプローチです。
-
-UIは3カラム構成：
-
-1. **左** ― スニペット一覧、キーワード検索、タグフィルタ
-2. **中央** ― プレビュー（Light/Dark切替）
-3. **右** ― エディタ（名前・プロパティ入力・タグ付与）
-
-スニペットはすべてLocalStorageに保存され、
-**作成・更新・削除・タグ付け・タグ削除** がすべてクライアント内で完結します。
-
----
-
-# 🎮 機能一覧（Features）
-
-## ▼ スニペット管理（CRUD）
-
-✔ 新規作成
-✔ 上書き保存
-✔ 削除（確認ダイアログ付き）
-✔ クリップボードへコピー
-✔ 選択時に「名前 / プロパティ / タグ」を自動復元
-
-JSでは以下を実装：
-`localStorage.setItem`、`removeItem`、選択→エディタへの反映など。
-
----
-
-## ▼ プレビュー（Design Sandbox）
-
-* スニペットのCSSプロパティを `style` 属性として即適用
-* `.canvas-dark` の付け外しで Light/Dark を切替
-* Remove で初期状態に戻す
-
-“**視覚で即確認できる**”体験に重点を置き、
-デザインのスクラップブックとしての使い心地を強化しています。
-
----
-
-## ▼ タグ管理
-
-* タグ追加（重複チェックあり）
-* AND条件でのタグフィルタ
-* バッジクリックでタグ付与／解除
-* タグ削除 → 全スニペットから該当タグが自動除去
-
-データ構造：
-
-```
-tagList = ["color", "layout"]
-snippet = { snippet: "...", tags: ["color"] }
-```
-
-UIは2箇所：
-左＝フィルタ用、右＝スニペット編集用。
-
----
-
-## ▼ 検索（キーワード + タグのAND）
-
-* タイトルの部分一致
-* タグフィルタとの併用
-* すべての条件を満たすスニペットのみ表示
-
----
-
-## ▼ レスポンシブ対応
-
-Desktop → 3カラム
-Mobile →
-
-1. プレビュー
-2. エディタ
-3. リスト
-
-という順に再構成。
-CSS Gridで領域を切り替え最適化しています。
-
----
-
-# 🎨 UI / デザイン
-
-## ▼ テーマ
+### **④ 世界観を統一したダークUIデザイン**
 
 * Interフォント
-* ダークUI（#0d1117）
-* ガラス風の透過・ぼかし
-* 控えめなシャドウで“プロダクト感”を演出
+* 透明感 × ブラー × 紫アクセント
+* シャドウの強弱調整
+* 統一されたタグ／ボタンデザイン
 
-全体として、
-**「整理されたビジュアル・スクラップブック」**
-の世界観に合わせて調整しています。
+「学習アプリ感」を排除し、**実務でそのまま使える質感** に寄せた。
 
 ---
 
-## ▼ レイアウト（Grid）
+### **⑤ 完全カスタムモーダル（Promiseベース）**
 
-```
-Left   : スニペット一覧 + タグ
-Center : プレビュー
-Right  : エディタ
-```
+標準 alert / confirm を排除し、以下を独自実装：
 
-Desktop：20% – 1fr – 30%
-Mobile：1カラム化。
+* `mkOk(message)`（OKのみ）
+* `mkConfirm(message)`（OK/Cancel → true/false）
 
----
-
-## ▼ コンポーネント仕様
-
-### ● スニペットアイテム
-
-タイトル長文を `text-overflow: ellipsis` で整形。
-
-### ● タグバッジ
-
-丸みのあるピル型、active時はグラデーションで状態を可視化。
+どの操作でも一定したUXで扱えるように統一。
+汎用的に別のアプリでも使いまわせるよう切り分けて管理。
 
 ---
 
-# 🛠 UX / 補助機能
+## **⑥ 難しかった点・次回トライしたいこと**
 
-* 未入力時のアラート
-* 空スニペットの保存防止
-* 削除時の確認
-* Apply / Remove のフィードバック
-* コピー完了通知
-
----
-
-# 🔥 実装のキモ（Key Implementation Points）
-
-## 1. LocalStorage設計
-
-スニペット保存形式：
-
-```
-key: "glass-card-base"
-value: { snippet: "...", tags: [] }
-```
-
-タグは別の `tagList` で管理。
+* タグ削除 → 全Snippet → UI反映の**同期処理の順序整理**
+* LocalStorage特有の
+  **“文字列 ⇄ JSON” の変換** の理解
+* AND検索ロジックの構築
+* レスポンシブ時の
+  **min-width / overflow / height** の3軸調整
+* グリッドレイアウトの崩れを防ぐための
+  **item-title の幅制御**
 
 ---
 
-## 2. タグの双方向同期
+## **⑦ フリー項目**
 
-タグ削除時に更新される要素：
-
-* tagList
-* 各スニペットの tags[]
-* フィルタUI
-* エディタUI
-* スニペット一覧
-
-アプリ全体の整合性を維持するための重要処理。
+* 初めに **PowerPointでワイヤーフレームを作成**し、UI構造を可視化してから実装。
+* カラーボックスで仮レイアウト → HTML骨格化 → JS機能追加 の順に進め、
+  **UIの揺れを最小限にした実装フロー** が非常に有効だった。
+* 今後はプリセットスニペットの追加や、JSONエクスポート／インポートなどの
+  **実用化に向けた機能拡張** を検討したい。
 
 ---
 
-## 3. キーワード + タグのANDロジック
+---
+
+# 📘 **② README（日本語版）**
+
+---
+
+# 🎨 CSS Atelier – README
+
+## 📝 概要
+
+**CSS Atelier** は、CSSスニペットを保存・検索・タグ管理し、即プレビューできる
+**クリエイター向けの軽量Webアプリ** です。
+
+特徴：
+
+* 小さなCSSの断片をどんどん集められる
+* プレビューで “一瞬で見た目を確認”
+* タグで整理し、後から取り出しやすい
+* UIデザイン用の **“CSSビジュアルスクラップブック”**
+
+全データは LocalStorage に保存され、
+ログイン不要・インストール不要で利用できます。
+
+---
+
+## 🎮 機能一覧
+
+### ✔ スニペット管理（CRUD）
+
+* 新規作成
+* 上書き保存
+* 削除（mkConfirm）
+* コピー（Clipboard API）
+* 選択時の自動復元
+* 空入力の保存防止（mkOk）
+
+---
+
+### ✔ プレビュー
+
+* 入力したCSSプロパティを即適用
+* Dark/Lightテーマ切替
+* Removeで初期化
+* デザインスケッチに最適な“即時反映方式”
+
+---
+
+### ✔ タグ管理
+
+* タグ追加（重複チェック）
+* バッジクリックで付与/解除
+* ANDフィルタで検索性UP
+* タグ削除時は全データを自動同期
+
+---
+
+### ✔ 検索
+
+* 名前の部分一致
+* タグのAND組み合わせ
+* 小規模DBのように高速フィルタリング
+
+---
+
+### ✔ カスタムモーダル（mkOk / mkConfirm）
+
+### （Promiseで処理をブロックしない通知UX）
 
 ```js
-if (keyword !== "" && !title.includes(keyword)) continue;
-for (tag of selectedTags) {
-  if (!snippetTags.includes(tag)) hit = false;
-}
+await mkOk("Saved!");
+const ok = await mkConfirm("Delete?");
 ```
 
 ---
 
-## 4. テーマ切替
+## 🎨 UIデザイン
 
-`.canvas-dark` の add/remove により
-背景・文字色・ボーダー・影などDark用スタイルを適用。
+* ダークUI
+* ガラス系エフェクト
+* 紫系アクセント
+* Interフォント
+* 3カラム〜モバイル対応のGrid構成
 
----
-
-# 🔧 技術スタック（Tech Stack）
-
-HTML5 / CSS3 / jQuery / LocalStorage / clipboard API / Responsive Grid
-
----
-
-# 🕹 アプリフロー（App Flow）
-
-1. スニペット読み込み
-2. 検索・フィルタ
-3. スニペット選択
-4. Apply
-5. 保存
-6. タグ管理
-7. 削除
-8. モバイルでは「プレビュー → エディタ → リスト」の順
+シンプルだが**プロダクト品質の質感**に寄せた。
 
 ---
 
-# 🗂 ディレクトリ構造
+## 🔧 技術
+
+* HTML5
+* CSS3（Grid, Responsive, Blur, Shadow）
+* jQuery
+* LocalStorage
+* Clipboard API
+* Promiseによるモーダル制御
+
+---
+
+## 🗂 ディレクトリ構造
 
 ```
 .
 ├── index.html
 ├── css/
-│   └── style.css
+│   ├── style.css
+│   └── modal.css
 ├── js/
-│   └── main.js
+│   ├── main.js
+│   └── modal.js
 └── img/
     └── logo.svg
 ```
 
 ---
 
-# ▶ 使い方（How to Run）
+## ▶ 使い方
 
-1. リポジトリをクローン
-2. `index.html` をブラウザで開く
-3. インストール不要（LocalStorageのみ使用）
+1. ダウンロードまたはClone
+2. `index.html`を開くだけで利用可能（LocalStorageを使用）
 
 ---
 
-# 📘 学習ポイント（Learning）
+## 📘 学びポイント
 
-* LocalStorage を“ミニDB”として扱う発想
+* LocalStorageをミニDBとして扱う発想
 * UIコンポーネント間の状態同期
-* jQueryイベント操作の理解深化
-* Gridベースのレスポンシブ設計
-* 実用的なタグ管理ロジック
-* 即時プレビューを中心にしたUX設計
+* jQueryでのイベント制御
+* Gridレイアウトとレスポンシブ
+* AND検索ロジック
+* Promiseモーダルの実装
 
 ---
 
-# 📄 ライセンス
-
-学習目的で制作。
-ロゴはAI生成素材を調整して使用。
-
----
-
-# ✨ Author
+## ✨ Author
 
 Chiyuria
 
 ---
 
-# 🎨 **CSS Atelier – README (English Version)**
+---
 
-*(with the “visual scrapbook” concept woven throughout)*
+# 📗 **③ README（English Version）**
 
 ---
 
-# 📝 Overview
+# 🎨 CSS Atelier – README (English)
 
-**CSS Atelier** is a lightweight web application that lets you save, search, tag, and instantly preview CSS snippets.
+## 📝 Overview
 
-More than just a CRUD tool, it is designed as a
-**visual scrapbook for UI designers—where you can try out small CSS fragments, see their appearance instantly, and collect them for future use.**
+**CSS Atelier** is a lightweight web application that allows you to save, search, tag, and instantly preview reusable CSS snippets.
 
-This workflow mirrors a common real-world need:
-*“Store reusable pieces of styling, retrieve them later, experiment visually, and apply them quickly.”*
+Designed as a
+**“visual scrapbook for UI designers,”**
+it helps you collect small fragments of CSS and immediately check how they look.
 
-The interface is structured into **three columns**:
-
-1. **Left** — Snippet list, keyword search, tag filters
-2. **Center** — Live Preview (Light/Dark theme switch)
-3. **Right** — Editor for snippet name, properties, and tag assignment
-
-All snippets are stored in LocalStorage:
-**create, update, delete, tagging, and tag removal** are all handled client-side.
+All data is stored in **LocalStorage**, so no login or backend is required.
 
 ---
 
-# 🎮 Features
+## 🎮 Features
 
-## ▼ Snippet Management (CRUD)
+### ✔ Snippet Management
 
-✔ Create new snippet
-✔ Update existing snippet
-✔ Delete with confirmation
-✔ Copy via clipboard API
-✔ Auto-restore name / properties / tags when selected
-
-JavaScript implementation:
-`localStorage.setItem`, `removeItem`, selection → editor auto-fill.
+* Create / Update / Delete
+* Confirmation with custom modal (mkConfirm)
+* Copy to clipboard
+* Auto-restore when selected
+* Prevent empty save (mkOk)
 
 ---
 
-## ▼ Preview (Design Sandbox)
+### ✔ Live Preview
 
-* Apply snippet properties directly as inline CSS
-* Switch Light/Dark using `.canvas-dark`
-* Reset styles using Remove
-
-Designed to support **instant visual checking**, reinforcing the “scrapbook” experience.
-
----
-
-## ▼ Tag Management
-
-* Add tags (duplicate-safe)
-* Filter snippets with AND logic
-* Assign tags via clickable badges
-* Delete tags → auto-remove from all snippets
-
-Data structure:
-
-```
-tagList = ["color", "layout"]
-snippet = { snippet: "...", tags: ["color"] }
-```
-
-Two UIs:
-Left = filters, Right = tag assignment.
+* CSS properties applied directly to inline style
+* Light/Dark theme
+* Reset with one click
+* Instant visual feedback for design exploration
 
 ---
 
-## ▼ Search (Keyword + Tag AND)
+### ✔ Tag Management
 
-* Partial match on snippet titles
+* Add tags
+* Assign or unassign with click
+* AND filtering for high-precision search
+* Automatic synchronization on tag deletion
+
+---
+
+### ✔ Search
+
+* Partial keyword match
 * Combined with tag filters
-* Only snippets that satisfy **all conditions** appear
+* Only snippets matching all conditions are displayed
 
 ---
 
-## ▼ Responsive
+## ✔ Custom Modal System (mkOk / mkConfirm)
 
-Desktop → 3-column
-Mobile → reorganized into:
-
-1. Preview
-2. Editor
-3. List
-
-Optimized with CSS Grid area switching.
-
----
-
-# 🎨 UI / Design
-
-## ▼ Theme
-
-* Inter font
-* Dark UI (#0d1117)
-* Glass-style translucency + blur
-* Subtle shadows for an elevated “product-like” feel
-
-All tuned to support the concept of a **clean, visual design scrapbook**.
-
----
-
-## ▼ Layout (Grid)
-
-```
-Left   : Snippet List + Tags
-Center : Preview
-Right  : Editor
-```
-
-Desktop: 20% – 1fr – 30%
-Mobile: single-column.
-
----
-
-## ▼ Component Behavior
-
-### Snippet Item
-
-Long titles handled via ellipsis.
-
-### Tag Badge
-
-Pill-style with gradient activation.
-
----
-
-# 🛠 UX / Helper Features
-
-* Alerts for missing fields
-* Prevent saving empty snippets
-* Confirmation on delete
-* Feedback on Apply / Remove
-* Clipboard copy notice
-
----
-
-# 🔥 Key Implementation Points
-
-## 1. LocalStorage Architecture
-
-Snippets stored as:
-
-```
-key: "glass-card-base"
-value: { snippet: "...", tags: [] }
-```
-
-Tag management handled separately.
-
----
-
-## 2. Two-Way Tag Synchronization
-
-Tag deletion updates:
-
-* tagList
-* each snippet’s tags
-* filter UI
-* editor UI
-* snippet list
-
-Ensures consistency across the app.
-
----
-
-## 3. Combined Keyword + Tag AND Logic
+Promise-based UI replacing native alerts.
 
 ```js
-if (keyword !== "" && !title.includes(keyword)) continue;
-for (tag of selectedTags) {
-  if (!snippetTags.includes(tag)) hit = false;
-}
+await mkOk("Saved!");
+const ok = await mkConfirm("Delete?");
 ```
 
 ---
 
-## 4. Theme Switching
+## 🎨 UI / Design
 
-Dark mode toggled with `.canvas-dark`,
-with CSS controlling color, background, border, shadow.
+* Dark UI
+* Glassy blur
+* Purple accent
+* Inter font
+* 3-column grid + mobile layout reflow
 
----
-
-# 🔧 Tech Stack
-
-HTML5 / CSS3 / jQuery / LocalStorage / Clipboard API / Responsive Grid
-
----
-
-# 🕹 App Flow
-
-1. Load snippets
-2. Filter
-3. Select snippet
-4. Apply
-5. Save
-6. Manage tags
-7. Delete when needed
-8. Mobile: Preview → Editor → List
+A simple yet practical and polished tool.
 
 ---
 
-# 🗂 Directory Structure
+## 🔧 Tech Stack
+
+* HTML5
+* CSS3 (Grid, Responsive, Blur)
+* jQuery
+* LocalStorage
+* Clipboard API
+* Promise-based modal dialog system
+
+---
+
+## 🗂 Directory Structure
 
 ```
 .
 ├── index.html
 ├── css/
-│   └── style.css
+│   ├── style.css
+│   └── modal.css
 ├── js/
-│   └── main.js
+│   ├── main.js
+│   └── modal.js
 └── img/
     └── logo.svg
 ```
 
 ---
 
-# ▶ How to Run
+## ▶ How to Use
 
-Clone → open `index.html` → done.
+1. Clone the repository
+2. Open `index.html`
+3. Everything works instantly (LocalStorage only)
 
 ---
 
-# 📘 Learning Points
+## 📘 Learning Points
 
 * Treating LocalStorage as a mini database
-* Understanding state sync between UI components
-* Deepening jQuery event handling
+* Designing synchronized UI states
+* jQuery event workflow
 * Grid-based responsive design
-* Implementing practical tag management
-* Building an instant visual preview workflow
+* Tagging logic
+* Promise-driven UX with custom modals
 
 ---
 
-# 📄 License
-
-Educational use.
-Logo includes AI-generated assets.
-
----
-
-# ✨ Author
+## ✨ Author
 
 Chiyuria
 

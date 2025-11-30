@@ -1,0 +1,68 @@
+.mk-hidden {
+  display: none !important;
+}
+
+.mk-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.mk-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  pointer-events: auto;
+}
+
+.mk-box {
+  position: relative;
+  background: #1e1e1e;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 32rem;
+  color: #fff;
+  z-index: 10000;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+  pointer-events: auto;
+}
+
+
+.mk-btn-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.mk-btn {
+  padding: 0.8rem 1.2rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: #6d4bd9;
+  color: #fff;
+  font-size: 1.4rem;
+  height: 3rem;
+}
+
+.mk-btn.cancel {
+  background: #444;
+}
+
+p {
+  font-size: 1.4rem;
+}
+
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+  .mk-box {
+    width: 70%;
+  }
+}

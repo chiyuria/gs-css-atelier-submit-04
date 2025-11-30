@@ -8,10 +8,32 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="./css/modal.css">
     <link rel="stylesheet" href="./css/style.css" />
     <title>CSS Atelier</title>
   </head>
   <body>
+    <!-- OK Modal -->
+    <div id="mk-modal-ok" class="mk-modal mk-hidden">
+      <div class="mk-bg"></div>
+      <div class="mk-box">
+        <p id="mk-ok-msg"></p>
+        <button id="mk-ok-btn" class="mk-btn">OK</button>
+      </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="mk-modal-confirm" class="mk-modal mk-hidden">
+      <div class="mk-bg"></div>
+      <div class="mk-box">
+        <p id="mk-confirm-msg"></p>
+        <div class="mk-btn-line">
+          <button id="mk-confirm-ok" class="mk-btn ok">OK</button>
+          <button id="mk-confirm-cancel" class="mk-btn cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <header>
       <div class="logo">
         <img src="./img/logo.svg" alt="logo-image" />
@@ -115,5 +137,6 @@
     </div>
 
     <script src="./js/main.js"></script>
+    <script src="./js/modal.js"></script>
   </body>
 </html>

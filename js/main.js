@@ -46,7 +46,7 @@ $(document).on("click", ".item-title", function (e) {
 });
 
 //----Save Snippet----//
-$("#save").on("click", function () {
+$("#save").on("click", async function () {
   const key = $("#codename").val();
   const code = $("#codearea").val();
   const raw = localStorage.getItem(key);
@@ -66,7 +66,7 @@ $("#save").on("click", function () {
   };
 
   if (key == "" || code == "") {
-    alert("Please enter both the name and the snippet.");
+    await mkOk("Please enter both the name and the snippet.");
     return;
   }
 
@@ -81,48 +81,48 @@ $("#save").on("click", function () {
 
   if ($(`li[data-key="${key}"]`).length === 0) {
     $("#item-list").append(html);
-    alert("Saved!");
+    await mkOk("Saved!");
   } else {
-    alert("Updated!");
+    await mkOk("Updated!");
   }
 });
 
 //----Delete Snippet----//
-$(document).on("click", ".delete-btn", function (e) {
+$(document).on("click", ".delete-btn", async function (e) {
   e.stopPropagation();
-  if (
-    !confirm(
-      "Are you sure you want to delete this item? This action cannot be undone."
-    )
-  ) {
-    return;
-  }
+
+  const agree = await mkConfirm(
+    "This action cannot be undone. Are you sure you want to delete this item?"
+  );
+
+  if (!agree) return;
+
   const li = $(this).closest("li");
   const key = li.data("key");
   localStorage.removeItem(key);
   li.remove();
-  alert("Deleted!");
+  await mkOk("Deleted!");
 });
 
 //----Clear Editor----//
-$("#clear").on("click", function () {
+$("#clear").on("click", async function () {
   draftTags = [];
   $("#codename").val("");
   $("#codearea").val("");
   $(".editor-tag").removeClass("active"); //タグ表示もクリア
-  alert("Cleared!");
+  await mkOk("Cleared!");
 });
 
 //----Copy Snippet----//
-$("#copy").on("click", function () {
+$("#copy").on("click", async function () {
   const code = $("#codearea").val();
   if (code === "") {
-    alert("The snippet area is empty.");
+    await mkOk("The snippet area is empty.");
     return;
   }
   console.log(code);
-  navigator.clipboard.writeText(code).then(function () {
-    alert("Copied!");
+  navigator.clipboard.writeText(code).then(async function () {
+    await mkOk("Copied!");
   });
 });
 
@@ -132,10 +132,10 @@ $("#apply").on("click", function () {
   applySnippet();
 });
 
-function applySnippet () {
+async function applySnippet() {
   const code = $("#codearea").val();
   if (code === "") {
-    alert("The snippet area is empty.");
+    await mkOk("The snippet area is empty.");
     return;
   }
   console.log(code);
@@ -233,16 +233,16 @@ function refreshTagEditorItems(associatedTags = []) {
 }
 
 //----Add Tags----//
-$("#addTag").on("click", function () {
+$("#addTag").on("click", async function () {
   const raw = $("#inputTag").val();
   const tag = raw.trim().toLowerCase();
   if (tag == "") {
-    alert("Enter the tag name you want to add.");
+    await mkOk("Enter the tag name you want to add.");
     return;
   }
   const list = getTagList();
   if (list.includes(tag)) {
-    alert("Already exists!");
+    await mkOk("Already exists!");
     return;
   }
   list.push(tag);
@@ -250,7 +250,6 @@ $("#addTag").on("click", function () {
   $("#inputTag").val("");
   refreshTagFilterItems();
   refreshTagEditorItems([]);
-  alert("Added tag!");
 });
 
 //----Active Select Tags----//
@@ -302,20 +301,18 @@ function getSelectedTags() {
 }
 
 //----Delete Tags----//
-function deleteSelectedTag() {
+async function deleteSelectedTag() {
   const selected = getSelectedTags();
 
   if (selected.length === 0) {
     return;
   }
 
-  if (
-    !confirm(
-      "Are you sure you want to delete the selected tags? The tags will also be deleted from your saved snippets."
-    )
-  ) {
-    return;
-  }
+  const agree = await mkConfirm(
+    "The tags will also be deleted from your saved snippets. Are you sure you want to delete the selected tags?"
+  );
+
+  if (!agree) return;
 
   let list = getTagList();
   list = list.filter((tag) => !selected.includes(tag));
